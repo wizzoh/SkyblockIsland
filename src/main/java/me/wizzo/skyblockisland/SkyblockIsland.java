@@ -4,6 +4,7 @@ import me.wizzo.skyblockisland.commands.IslandCommand;
 import me.wizzo.skyblockisland.database.HikariCPSettings;
 import me.wizzo.skyblockisland.files.ConfigFile;
 import me.wizzo.skyblockisland.files.DatabaseFile;
+import me.wizzo.skyblockisland.listeners.PlayerInventoryListener;
 import me.wizzo.skyblockisland.listeners.PlayerJoinQuitListener;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -30,6 +31,7 @@ public final class SkyblockIsland extends JavaPlugin {
         database();
         getCommand("island").setExecutor(new IslandCommand(this, "skyblockisland.island"));
         Bukkit.getPluginManager().registerEvents(new PlayerJoinQuitListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerInventoryListener(this), this);
         this.prefix = configFile.get().getString("Prefix");
 
         try {
