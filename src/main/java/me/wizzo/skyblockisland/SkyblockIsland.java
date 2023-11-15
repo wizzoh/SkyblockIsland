@@ -12,6 +12,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class SkyblockIsland extends JavaPlugin {
 
@@ -92,6 +94,14 @@ public final class SkyblockIsland extends JavaPlugin {
     public String colorsMessage(String message) {
         return ChatColor.translateAlternateColorCodes('&', message);
     }
+    public List<String> colorsMessage(List<String> message) {
+        List<String> list = new ArrayList<>();
+
+        for (String string: message) {
+            list.add(ChatColor.translateAlternateColorCodes('&', string));
+        }
+        return list;
+    }
     public ConsoleCommandSender getConsole() {
         return console;
     }
@@ -102,6 +112,9 @@ public final class SkyblockIsland extends JavaPlugin {
     }
     public int getConfigInt(String string) {
         return configFile.get().getInt(string);
+    }
+    public List<String> getConfigStringList(String string) {
+        return colorsMessage(configFile.get().getStringList(string));
     }
     public DatabaseFile getDatabaseConfig() {
         return databaseFile;

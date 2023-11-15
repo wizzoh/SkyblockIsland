@@ -47,7 +47,7 @@ public class IslandCommand implements CommandExecutor {
                         main.getConfigString("Path.Island-folder") + playerName
                 );
             } else {
-                GUI gui = new GUI(main.getConfigString("Gui.Title"), main.getConfigInt("Gui.Size"));
+                GUI gui = new GUI(main, main.getConfigString("Gui.Title"), main.getConfigInt("Gui.Size"));
                 gui.openInventory(player);
             }
             return true;

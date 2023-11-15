@@ -72,6 +72,26 @@ public class ConfigFile {
         config.set("Gui.Title", "&eGestore isola");
         config.set("Gui.Size", 9);
 
+        config.set("Gui.Items.Teleport-item", "redstone_torch");
+        config.set("Gui.Items.Teleport-slot", 1);
+        config.set("Gui.Items.Teleport-name", "&aVai alla tua isola");
+        config.set("Gui.Items.Teleport-lore", Arrays.asList("&7Clicca qui per tornare", "&7alla tua isola."));
+
+        config.set("Gui.Items.Delete-item", "clock");
+        config.set("Gui.Items.Delete-slot", 4);
+        config.set("Gui.Items.Delete-name", "&cCancella l'isola");
+        config.set("Gui.Items.Delete-lore", Arrays.asList("&7Clicca qui per &ccancellare", "&7la tua isola.", "&7Ricordati che non potrai", "&7tornare indietro."));
+
+        config.set("Gui.Items.Reset-item", "barrier");
+        config.set("Gui.Items.Reset-slot", 7);
+        config.set("Gui.Items.Reset-name", "&cResetta l'isola");
+        config.set("Gui.Items.Reset-lore",
+                Arrays.asList("&7Clicca qui per &cresettare",
+                "&7la tua isola.", "&7Ricordati che non potrai", "&7tornare indietro.",
+                "&7Prezzo: &6500 coins"
+                )
+        );
+
         config.setComments("test", Arrays.asList("aaaa", "testet"));
         config.set("Path.Template-world-copier", "world/");
         config.set("Path.Island-folder", "islands/");
