@@ -6,23 +6,22 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 
-public class ConfigFile {
+public class DatabaseFile {
 
     private File file;
     private FileConfiguration config;
     private final SkyblockIsland main;
     private String error;
 
-    public ConfigFile(SkyblockIsland main) {
+    public DatabaseFile(SkyblockIsland main) {
         this.main = main;
-        setup("config.yml");
+        setup("database.yml");
     }
 
     public void setup(String fileName) {
         file = new File(main.getDataFolder(), fileName);
-        error = main.colorsMessage("&cBedWars: Errore durante il caricamento dei config");
+        error = main.colorsMessage("&cBedWars: Errore durante il caricamento del database");
 
         if (!file.exists()) {
             try {
@@ -65,15 +64,14 @@ public class ConfigFile {
     }
 
     private void defaultConfig() {
-        config.set("Prefix", "&6&lIsland &r");
-        config.set("No-perm", "{prefix}&7Non hai il permesso per eseguire questo comando.");
-        config.set("Only-player-can-execute", "{prefix}&7Solo i player possono eseguire questo comando.");
-
-        config.set("Gui.Title", "&eGestore isola");
-        config.set("Gui.Size", 9);
-
-        config.setComments("test", Arrays.asList("aaaa", "testet"));
-        config.set("Path.Template-world-copier", "world/");
-        config.set("Path.Island-folder", "islands/");
+        config.set("Url", "jdbc:mysql://{ip}:{port}/{database}");
+        config.set("ClassName", "com.mysql.jdbc.Driver");
+        config.set("Host", "127.0.0.1");
+        config.set("Port", 3306);
+        config.set("Database", "database");
+        config.set("Username", "root");
+        config.set("Password", "password");
+        config.set("Max-pool-size", 10);
+        config.set("Tables.Player-data", "player_island");
     }
 }

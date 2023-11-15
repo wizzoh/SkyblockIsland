@@ -1,4 +1,4 @@
-package me.wizzo.skyblockisland;
+package me.wizzo.skyblockisland.manager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
