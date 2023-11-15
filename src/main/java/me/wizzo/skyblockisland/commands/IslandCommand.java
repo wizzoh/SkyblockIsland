@@ -44,7 +44,9 @@ public class IslandCommand implements CommandExecutor {
             if (PlayerData.haveNotIsland(playerName)) {
                 IslandManager.createWorld(
                         main.getConfigString("Path.Template-world-copier"),
-                        main.getConfigString("Path.Island-folder") + playerName
+                        main.getConfigString("Path.Island-folder") + playerName,
+                        playerName,
+                        playerName
                 );
             } else {
                 GUI gui = new GUI(main, main.getConfigString("Gui.Title"), main.getConfigInt("Gui.Size"));
@@ -81,7 +83,9 @@ public class IslandCommand implements CommandExecutor {
                 IslandManager.resetWorld(
                         new File(main.getConfigString("Path.Island-folder")),
                         main.getConfigString("Path.Template-world-copier"),
-                        main.getConfigString("Path.Island-folder") + PlayerData.getIslandName(playerName)
+                        main.getConfigString("Path.Island-folder") + PlayerData.getIslandName(playerName),
+                        playerName,
+                        playerName
                 );
                 player.sendMessage(main.getConfigString("Island.Reset-success"));
                 break;

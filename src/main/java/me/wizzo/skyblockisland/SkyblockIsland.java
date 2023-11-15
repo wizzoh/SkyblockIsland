@@ -2,6 +2,7 @@ package me.wizzo.skyblockisland;
 
 import me.wizzo.skyblockisland.commands.IslandCommand;
 import me.wizzo.skyblockisland.database.HikariCPSettings;
+import me.wizzo.skyblockisland.database.PlayerData;
 import me.wizzo.skyblockisland.files.ConfigFile;
 import me.wizzo.skyblockisland.files.DatabaseFile;
 import me.wizzo.skyblockisland.listeners.PlayerInventoryListener;
@@ -36,6 +37,7 @@ public final class SkyblockIsland extends JavaPlugin {
 
         try {
             hikariCPSettings.initSource(this);
+            PlayerData.createTables();
             console.sendMessage("");
             console.sendMessage(colorsMessage(this.getDescription().getName() + " &7Connessione al database eseguita!"));
             console.sendMessage(colorsMessage(this.getDescription().getName() + " &7Plugin online - versione " + this.getDescription().getVersion()));
@@ -89,6 +91,7 @@ public final class SkyblockIsland extends JavaPlugin {
 
     private void database() {
         this.hikariCPSettings = new HikariCPSettings();
+        new PlayerData(this);
     }
 
     //---------------

@@ -1,5 +1,6 @@
 package me.wizzo.skyblockisland.manager;
 
+import me.wizzo.skyblockisland.database.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.WorldCreator;
 
@@ -11,7 +12,7 @@ import java.nio.file.StandardCopyOption;
 
 public class IslandManager {
 
-    public static void createWorld(String sourceFolderName, String destinationFolderName) {
+    public static void createWorld(String sourceFolderName, String destinationFolderName, String playerName, String worldName) {
         File source = null;
         
         try {
@@ -29,6 +30,7 @@ public class IslandManager {
                e.printStackTrace();
            }
         }
+        PlayerData.createIslandPlayer(playerName, worldName);
         loadWorld(destinationFolderName);
     }
 
@@ -49,9 +51,9 @@ public class IslandManager {
         }
     }
 
-    public static void resetWorld(File worldFile, String sourceFolderName, String destinationFolderName) {
+    public static void resetWorld(File worldFile, String sourceFolderName, String destinationFolderName, String playerName, String worldName) {
         deleteWorld(worldFile);
-        createWorld(sourceFolderName, destinationFolderName);
+        createWorld(sourceFolderName, destinationFolderName, playerName, worldName);
     }
 
     public static void unloadWorld(String worldName) {
@@ -71,6 +73,12 @@ public class IslandManager {
                     Files.createDirectories(destinationPath);
                 } else {
                     Files.copy(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
+                    if (destinationPath.toFile().getName().equalsIgnoreCase("uid.dat")) {
+                        boolean success = destinationPath.toFile().delete();
+                        if (!success) {
+                            System.out.println("Errore nel copiare i dati.");
+                        }
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
