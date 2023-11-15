@@ -1,9 +1,7 @@
 package me.wizzo.skyblockisland.manager;
 
 import org.bukkit.Bukkit;
-import org.bukkit.World;
 import org.bukkit.WorldCreator;
-import org.bukkit.util.FileUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,17 +11,17 @@ import java.nio.file.StandardCopyOption;
 
 public class IslandManager {
 
-    public static void cloneWorld(String sourceFolderName, String destinationFolderName) {
+    public static void createWorld(String sourceFolderName, String destinationFolderName) {
         File source = null;
         
         try {
-            source = new File(sourceFolderName);
+            source = new File(Bukkit.getServer().getWorldContainer().getPath() + "\\" + sourceFolderName);
         } catch (Exception e) {
             e.printStackTrace();
         }
         
         if (source != null) {
-           File destination = new File(destinationFolderName);
+           File destination = new File(Bukkit.getServer().getWorldContainer().getPath() + "\\" + destinationFolderName);
 
            try {
                copyFolder(source.toPath(), destination.toPath());
@@ -53,7 +51,7 @@ public class IslandManager {
 
     public static void resetWorld(File worldFile, String sourceFolderName, String destinationFolderName) {
         deleteWorld(worldFile);
-        cloneWorld(sourceFolderName, destinationFolderName);
+        createWorld(sourceFolderName, destinationFolderName);
     }
 
     public static void unloadWorld(String worldName) {

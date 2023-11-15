@@ -75,5 +75,10 @@ public class ConfigFile {
         config.setComments("test", Arrays.asList("aaaa", "testet"));
         config.set("Path.Template-world-copier", "world/");
         config.set("Path.Island-folder", "islands/");
+
+        config.set("Island.Not-have-island", "{prefix}&7Devi prima creare un'isola con &e/island");
+        config.set("Island.Teleport-success", "{prefix}&7Sei stato teletrasportato alla tua isola.");
+        config.set("Island.Reset-success", "{prefix}&7L'isola è stata resettata correttamente.");
+        config.set("Island.Delete-success", "{prefix}&7L'isola è stata cancellata correttamente.");
     }
 }
