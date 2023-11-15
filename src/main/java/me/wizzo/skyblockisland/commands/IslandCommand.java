@@ -1,8 +1,12 @@
 package me.wizzo.skyblockisland.commands;
 
+import me.wizzo.skyblockisland.database.PlayerData;
 import me.wizzo.skyblockisland.manager.GUI;
 import me.wizzo.skyblockisland.SkyblockIsland;
 import me.wizzo.skyblockisland.manager.IslandManager;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -34,17 +38,42 @@ public class IslandCommand implements CommandExecutor {
             return true;
         }
 
+        String playerName = player.getName();
         if (args.length == 0) {
-            GUI gui = new GUI(main.getConfigString("Gui.Title"), main.getConfigInt("Gui.Size"));
-            gui.openInventory(player);
+
+            if (PlayerData.haveNotIsland(playerName)) {
+                IslandManager.createWorld(
+                        main.getConfigString("Path.Template-world-copier"),
+                        main.getConfigString("Path.Island-folder") + playerName
+                );
+            } else {
+                GUI gui = new GUI(main.getConfigString("Gui.Title"), main.getConfigInt("Gui.Size"));
+                gui.openInventory(player);
+            }
             return true;
         }
         String subCommand = args[0].toLowerCase();
 
+        if (PlayerData.haveNotIsland(playerName)) {
+            player.sendMessage(main.getConfigString("Island.Not-have-island"));
+            return true;
+        }
+
         switch (subCommand) {
             case "teleport":
             case "tp":
-                //do somethings
+                World world = Bukkit.getWorld(main.getConfigString("Path.Island-folder") + PlayerData.getIslandName(playerName));
+                if (world == null) {
+                    System.out.println("Errore: mondo non trovato.");
+                    break;
+                }
+                Location location = new Location(world,
+                        world.getSpawnLocation().getX(),
+                        world.getSpawnLocation().getY(),
+                        world.getSpawnLocation().getZ()
+                );
+                player.teleport(location);
+                player.sendMessage(main.getConfigString("Island.Teleport-success"));
                 break;
 
             case "regen":
@@ -52,12 +81,16 @@ public class IslandCommand implements CommandExecutor {
                 IslandManager.resetWorld(
                         new File(main.getConfigString("Path.Island-folder")),
                         main.getConfigString("Path.Template-world-copier"),
-                        main.getConfigString("Path.Island-folder")
+                        main.getConfigString("Path.Island-folder") + PlayerData.getIslandName(playerName)
                 );
+                player.sendMessage(main.getConfigString("Island.Reset-success"));
                 break;
 
             case "delete":
-                IslandManager.deleteWorld(new File(main.getConfigString("Path.Island-folder"))); // + worldName from database
+                IslandManager.deleteWorld(
+                        new File(main.getConfigString("Path.Island-folder") + PlayerData.getIslandName(playerName))
+                );
+                player.sendMessage(main.getConfigString("Island.Delete-success"));
                 break;
         }
         return true;
