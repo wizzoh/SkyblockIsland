@@ -43,19 +43,19 @@ public class GUI implements InventoryHolder {
         ItemStack deleteItem = new ItemStack(
                 Material.valueOf(main.getConfigString("Gui.Items.Delete-item").toUpperCase())
         );
-        ItemMeta deleteMeta = teleportItem.getItemMeta();
+        ItemMeta deleteMeta = deleteItem.getItemMeta();
         deleteMeta.setDisplayName(main.getConfigString("Gui.Items.Delete-name"));
         deleteMeta.setLore(main.getConfigStringList("Gui.Items.Delete-lore"));
-        teleportItem.setItemMeta(deleteMeta);
+        deleteItem.setItemMeta(deleteMeta);
 
         // Item per il reset
         ItemStack resetItem = new ItemStack(
                 Material.valueOf(main.getConfigString("Gui.Items.Reset-item").toUpperCase())
         );
-        ItemMeta resetMeta = teleportItem.getItemMeta();
+        ItemMeta resetMeta = resetItem.getItemMeta();
         resetMeta.setDisplayName(main.getConfigString("Gui.Items.Reset-name"));
         resetMeta.setLore(main.getConfigStringList("Gui.Items.Reset-lore"));
-        teleportItem.setItemMeta(resetMeta);
+        resetItem.setItemMeta(resetMeta);
 
         inventory.setItem(main.getConfigInt("Gui.Items.Teleport-slot"), teleportItem);
         inventory.setItem(main.getConfigInt("Gui.Items.Delete-slot"), deleteItem);
