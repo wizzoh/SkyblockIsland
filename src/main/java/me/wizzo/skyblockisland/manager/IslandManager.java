@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.Arrays;
+import java.util.List;
 
 public class IslandManager {
 
@@ -72,12 +74,16 @@ public class IslandManager {
                 if (Files.isDirectory(sourcePath)) {
                     Files.createDirectories(destinationPath);
                 } else {
-                    Files.copy(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
-                    if (destinationPath.toFile().getName().equalsIgnoreCase("uid.dat")) {
-                        boolean success = destinationPath.toFile().delete();
-                        if (!success) {
-                            System.out.println("Errore nel copiare i dati.");
-                        }
+                    List<String> list = Arrays.asList("session.lock", "uid.dat");
+
+                    if (!list.contains(destinationPath.toFile().getName())) {
+                        Files.copy(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
+                        /*if (destinationPath.toFile().getName().equalsIgnoreCase("uid.dat")) {
+                            boolean success = destinationPath.toFile().delete();
+                            if (!success) {
+                                System.out.println("Errore nel copiare i dati.");
+                            }
+                        }*/
                     }
                 }
             } catch (IOException e) {

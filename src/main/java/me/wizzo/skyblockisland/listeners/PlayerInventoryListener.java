@@ -19,7 +19,6 @@ public class PlayerInventoryListener implements Listener {
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         if (event.getView().getTitle().equals(main.getConfigString("Gui.Title"))) {
-            event.setCancelled(true);
             ItemStack itemClicked = event.getCurrentItem();
 
             if (itemClicked != null) {
@@ -40,6 +39,7 @@ public class PlayerInventoryListener implements Listener {
                     player.performCommand("island reset");
                 }
             }
+            event.setCancelled(true);
         }
     }
 
