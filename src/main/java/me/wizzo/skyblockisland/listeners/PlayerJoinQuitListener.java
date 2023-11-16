@@ -11,6 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class PlayerJoinQuitListener implements Listener {
 
@@ -24,7 +25,7 @@ public class PlayerJoinQuitListener implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         String playerName = event.getPlayer().getName();
-        World world = Bukkit.getWorld(main.getConfigString("Path.Template-world-copier").replace("/", ""));
+        World world = Bukkit.getWorld(main.getConfigString("Path.Template-world-copier"));
 
         if (world == null) {
             System.out.println("Mondo non trovato.");
@@ -49,7 +50,14 @@ public class PlayerJoinQuitListener implements Listener {
 
         if (!PlayerData.haveNotIsland(playerName)) {
             String worldName = main.getConfigString("Path.Island-folder") + PlayerData.getIslandName(playerName);
-            IslandManager.unloadWorld(worldName);
+
+            new BukkitRunnable() {
+
+                @Override
+                public void run() {
+                    IslandManager.unloadWorld(worldName);
+                }
+            }.runTaskLater(main, 20L);
         }
     }
 }

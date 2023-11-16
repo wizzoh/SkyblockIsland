@@ -43,7 +43,7 @@ public class IslandCommand implements CommandExecutor {
 
             if (PlayerData.haveNotIsland(playerName)) {
                 IslandManager.createWorld(
-                        main.getConfigString("Path.Template-world-copier"),
+                        main.getConfigString("Path.Template-world-copier") + "/",
                         main.getConfigString("Path.Island-folder") + playerName,
                         playerName,
                         playerName
@@ -76,39 +76,57 @@ public class IslandCommand implements CommandExecutor {
         switch (subCommand) {
             case "teleport":
             case "tp":
-                World world = Bukkit.getWorld(main.getConfigString("Path.Island-folder") + PlayerData.getIslandName(playerName));
-                if (world == null) {
-                    System.out.println("Errore: mondo non trovato.");
-                    break;
-                }
-                Location location = new Location(world,
-                        world.getSpawnLocation().getX(),
-                        world.getSpawnLocation().getY(),
-                        world.getSpawnLocation().getZ()
-                );
-                player.teleport(location);
+                islandTeleport(player);
                 player.sendMessage(main.getConfigString("Island.Teleport-success"));
                 break;
 
             case "regen":
             case "reset":
                 IslandManager.resetWorld(
-                        new File(main.getConfigString("Path.Island-folder")),
-                        main.getConfigString("Path.Template-world-copier"),
+                        new File(main.getConfigString("Path.Island-folder") + PlayerData.getIslandName(playerName)),
+                        main.getConfigString("Path.Template-world-copier") + "/",
                         main.getConfigString("Path.Island-folder") + PlayerData.getIslandName(playerName),
                         playerName,
                         playerName
                 );
-                PlayerData.removeIsland(playerName);
+                islandTeleport(player);
                 player.sendMessage(main.getConfigString("Island.Reset-success"));
                 break;
 
             case "delete":
-                IslandManager.deleteWorld(new File(main.getConfigString("Path.Island-folder") + PlayerData.getIslandName(playerName)));
+                World defWorld = Bukkit.getWorld(main.getConfigString("Path.Template-world-copier"));
+                if (defWorld == null) {
+                    System.out.println("Errore: mondo non trovato.");
+                    return true;
+                }
+                Location location1 = new Location(defWorld,
+                        defWorld.getSpawnLocation().getX(),
+                        defWorld.getSpawnLocation().getY(),
+                        defWorld.getSpawnLocation().getZ()
+                );
+                player.teleport(location1);
+                String islandFolderName = main.getConfigString("Path.Island-folder") + PlayerData.getIslandName(playerName);
+
+                IslandManager.unloadWorld(islandFolderName);
+                IslandManager.deleteWorld(new File(islandFolderName));
                 PlayerData.removeIsland(playerName);
                 player.sendMessage(main.getConfigString("Island.Delete-success"));
                 break;
         }
         return true;
+    }
+
+    private void islandTeleport(Player player) {
+        World world = Bukkit.getWorld(main.getConfigString("Path.Island-folder") + PlayerData.getIslandName(player.getName()));
+        if (world == null) {
+            System.out.println("Errore: mondo non trovato.");
+            return;
+        }
+        Location location = new Location(world,
+                world.getSpawnLocation().getX(),
+                world.getSpawnLocation().getY(),
+                world.getSpawnLocation().getZ()
+        );
+        player.teleport(location);
     }
 }

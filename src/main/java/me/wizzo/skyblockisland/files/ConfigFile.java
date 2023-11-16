@@ -92,8 +92,7 @@ public class ConfigFile {
                 )
         );
 
-        config.setComments("test", Arrays.asList("aaaa", "testet"));
-        config.set("Path.Template-world-copier", "world/");
+        config.set("Path.Template-world-copier", "world");
         config.set("Path.Island-folder", "islands/");
 
         config.set("Island.Not-have-island", "{prefix}&7Devi prima creare un'isola con &e/island");
