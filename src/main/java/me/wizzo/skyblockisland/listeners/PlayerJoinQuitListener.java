@@ -3,6 +3,9 @@ package me.wizzo.skyblockisland.listeners;
 import me.wizzo.skyblockisland.SkyblockIsland;
 import me.wizzo.skyblockisland.database.PlayerData;
 import me.wizzo.skyblockisland.manager.IslandManager;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -19,10 +22,23 @@ public class PlayerJoinQuitListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
         String playerName = event.getPlayer().getName();
+        World world = Bukkit.getWorld(main.getConfigString("Path.Template-world-copier").replace("/", ""));
+
+        if (world == null) {
+            System.out.println("Mondo non trovato.");
+            return;
+        }
+        player.teleport(new Location(
+                world,
+                world.getSpawnLocation().getX(),
+                world.getSpawnLocation().getY(),
+                world.getSpawnLocation().getZ()
+        ));
 
         if (!PlayerData.haveNotIsland(playerName)) {
-            String worldName = PlayerData.getIslandName(playerName);
+            String worldName = main.getConfigString("Path.Island-folder") + PlayerData.getIslandName(playerName);
             IslandManager.loadWorld(worldName);
         }
     }
@@ -32,7 +48,7 @@ public class PlayerJoinQuitListener implements Listener {
         String playerName = event.getPlayer().getName();
 
         if (!PlayerData.haveNotIsland(playerName)) {
-            String worldName = PlayerData.getIslandName(playerName);
+            String worldName = main.getConfigString("Path.Island-folder") + PlayerData.getIslandName(playerName);
             IslandManager.unloadWorld(worldName);
         }
     }
