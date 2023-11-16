@@ -76,20 +76,20 @@ public class IslandCommand implements CommandExecutor {
         switch (subCommand) {
             case "teleport":
             case "tp":
-                islandTeleport(player);
+                islandTeleport(player, main.getConfigString("Path.Island-folder") + PlayerData.getIslandName(player.getName()));
                 player.sendMessage(main.getConfigString("Island.Teleport-success"));
                 break;
 
-            case "regen":
             case "reset":
+                islandTeleport(player, main.getConfigString("Path.Template-world-copier"));
                 IslandManager.resetWorld(
-                        new File(main.getConfigString("Path.Island-folder") + PlayerData.getIslandName(playerName)),
-                        main.getConfigString("Path.Template-world-copier") + "/",
                         main.getConfigString("Path.Island-folder") + PlayerData.getIslandName(playerName),
+                        main.getConfigString("Path.Template-world-copier") + "/",
+                        main.getConfigString("Path.Island-folder") + playerName,
                         playerName,
                         playerName
                 );
-                islandTeleport(player);
+                islandTeleport(player, main.getConfigString("Path.Island-folder") + PlayerData.getIslandName(player.getName()));
                 player.sendMessage(main.getConfigString("Island.Reset-success"));
                 break;
 
@@ -107,7 +107,7 @@ public class IslandCommand implements CommandExecutor {
                 player.teleport(location1);
                 String islandFolderName = main.getConfigString("Path.Island-folder") + PlayerData.getIslandName(playerName);
 
-                IslandManager.unloadWorld(islandFolderName);
+                IslandManager.unloadWorld(islandFolderName, false);
                 IslandManager.deleteWorld(new File(islandFolderName));
                 PlayerData.removeIsland(playerName);
                 player.sendMessage(main.getConfigString("Island.Delete-success"));
@@ -116,8 +116,8 @@ public class IslandCommand implements CommandExecutor {
         return true;
     }
 
-    private void islandTeleport(Player player) {
-        World world = Bukkit.getWorld(main.getConfigString("Path.Island-folder") + PlayerData.getIslandName(player.getName()));
+    private void islandTeleport(Player player, String worldName) {
+        World world = Bukkit.getWorld(worldName);
         if (world == null) {
             System.out.println("Errore: mondo non trovato.");
             return;

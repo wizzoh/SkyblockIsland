@@ -54,33 +54,32 @@ public class IslandManager {
         }
     }
 
-    public static void resetWorld(File worldFile, String sourceFolderName, String destinationFolderName, String playerName, String worldName) {
-        unloadWorld(worldFile.getName());
-        deleteWorld(worldFile);
+    public static void resetWorld(String worldFileName, String sourceFolderName, String destinationFolderName, String playerName, String worldName) {
+        unloadWorld(worldFileName, false);
+        deleteWorld(new File(worldFileName));
         createWorld(sourceFolderName, destinationFolderName, playerName, worldName);
     }
 
-    public static void unloadWorld(String worldName) {
-        System.out.println(worldName);
+    public static void unloadWorld(String worldName, boolean save) {
         World world = Bukkit.getWorld(worldName);
-        System.out.println(world);
         if (world == null) {
-            System.out.println("Mondo da cancellare non trovato");
+            System.out.println("Mondo da scaricare non trovato");
             return;
         }
-        boolean a = Bukkit.getServer().unloadWorld(world, true);
+        boolean a = Bukkit.getServer().unloadWorld(world, save);
 
         if (a) {
-            System.out.println("UnLoad riuscito");
+            System.out.println("Unload riuscito");
         } else {
-            System.out.println("UnLoad non riuscito");
+            System.out.println("Unload non riuscito");
         }
 
 
     }
 
     public static void loadWorld(String worldName) {
-        Bukkit.getServer().createWorld(new WorldCreator(worldName));
+        World world = Bukkit.getServer().createWorld(new WorldCreator(worldName));
+        world.setAutoSave(false);
     }
 
     private static void copyFolder(Path source, Path destination) throws IOException {

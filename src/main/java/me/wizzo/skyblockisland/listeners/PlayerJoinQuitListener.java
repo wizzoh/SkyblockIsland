@@ -55,7 +55,7 @@ public class PlayerJoinQuitListener implements Listener {
 
                 @Override
                 public void run() {
-                    IslandManager.unloadWorld(worldName);
+                    IslandManager.unloadWorld(worldName, true);
                 }
             }.runTaskLater(main, 20L);
         }
