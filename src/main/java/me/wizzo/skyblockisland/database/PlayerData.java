@@ -20,7 +20,6 @@ public class PlayerData {
         PlayerData.main = main;
     }
 
-    //CREATE
     public static void createTables() {
         String query = formatted("create table if not exists {table} (Player_name varchar(18) not null, Island_name varchar(18) not null, primary key (Player_name))");
 
@@ -34,6 +33,7 @@ public class PlayerData {
 
     public static void createIslandPlayer(String playerName, String worldName) {
         String query = formatted("replace into {table} (Player_name, Island_name) values(?,?)");
+
         try (Connection connection = main.getHikariCPSettings().getSource().getConnection();
              PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, playerName);
@@ -76,5 +76,17 @@ public class PlayerData {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static void removeIsland(String playerName) {
+        String query = formatted("delete from {table} where Player_name=?");
+
+        try (Connection connection = main.getHikariCPSettings().getSource().getConnection();
+             PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, playerName);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

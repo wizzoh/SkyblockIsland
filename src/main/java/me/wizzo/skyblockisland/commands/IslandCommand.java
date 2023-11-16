@@ -48,6 +48,18 @@ public class IslandCommand implements CommandExecutor {
                         playerName,
                         playerName
                 );
+
+                World world = Bukkit.getWorld(main.getConfigString("Path.Island-folder") + PlayerData.getIslandName(playerName));
+                if (world == null) {
+                    System.out.println("Errore: mondo non trovato.");
+                    return true;
+                }
+                Location location = new Location(world,
+                        world.getSpawnLocation().getX(),
+                        world.getSpawnLocation().getY(),
+                        world.getSpawnLocation().getZ()
+                );
+                player.teleport(location);
             } else {
                 GUI gui = new GUI(main, main.getConfigString("Gui.Title"), main.getConfigInt("Gui.Size"));
                 gui.openInventory(player);
@@ -87,13 +99,13 @@ public class IslandCommand implements CommandExecutor {
                         playerName,
                         playerName
                 );
+                PlayerData.removeIsland(playerName);
                 player.sendMessage(main.getConfigString("Island.Reset-success"));
                 break;
 
             case "delete":
-                IslandManager.deleteWorld(
-                        new File(main.getConfigString("Path.Island-folder") + PlayerData.getIslandName(playerName))
-                );
+                IslandManager.deleteWorld(new File(main.getConfigString("Path.Island-folder") + PlayerData.getIslandName(playerName)));
+                PlayerData.removeIsland(playerName);
                 player.sendMessage(main.getConfigString("Island.Delete-success"));
                 break;
         }
