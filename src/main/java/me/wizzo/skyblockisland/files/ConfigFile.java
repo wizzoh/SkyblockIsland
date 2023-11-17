@@ -88,7 +88,7 @@ public class ConfigFile {
         config.set("Gui.Items.Reset-lore",
                 Arrays.asList("&7Clicca qui per &cresettare",
                 "&7la tua isola.", "&7Ricordati che non potrai", "&7tornare indietro.",
-                "&7Prezzo: &6500 coins"
+                "&7Prezzo: &6{cost} coins"
                 )
         );
 
@@ -98,6 +98,8 @@ public class ConfigFile {
         config.set("Island.Not-have-island", "{prefix}&7Devi prima creare un'isola con &e/island");
         config.set("Island.Teleport-success", "{prefix}&7Sei stato teletrasportato alla tua isola.");
         config.set("Island.Reset-success", "{prefix}&7L'isola è stata resettata correttamente.");
+        config.set("Island.Reset-no-money", "{prefix}&7Non hai abbastanza coins per resettare l'isola.");
+        config.set("Island.Reset-cost", 200);
         config.set("Island.Delete-success", "{prefix}&7L'isola è stata cancellata correttamente.");
     }
 }

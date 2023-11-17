@@ -3,6 +3,8 @@ version: '${project.version}'
 main: me.wizzo.skyblockisland.SkyblockIsland
 api-version: '1.20'
 author: wiz
+depend:
+  - Vault
 commands:
   island:
     description: island command

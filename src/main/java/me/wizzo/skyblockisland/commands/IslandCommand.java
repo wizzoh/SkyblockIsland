@@ -4,6 +4,8 @@ import me.wizzo.skyblockisland.database.PlayerData;
 import me.wizzo.skyblockisland.manager.GUI;
 import me.wizzo.skyblockisland.SkyblockIsland;
 import me.wizzo.skyblockisland.manager.IslandManager;
+import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -72,8 +74,18 @@ public class IslandCommand implements CommandExecutor {
             player.sendMessage(main.getConfigString("Island.Not-have-island"));
             return true;
         }
+        Economy economy = SkyblockIsland.getEconomy();
 
         switch (subCommand) {
+            case "addmoney":
+                EconomyResponse response = economy.depositPlayer(player, 200);
+                if (response.transactionSuccess()) {
+                    player.sendMessage("Coins aggiunti");
+                } else {
+                    player.sendMessage("No coins, povero");
+                }
+                break;
+
             case "teleport":
             case "tp":
                 islandTeleport(player, main.getConfigString("Path.Island-folder") + PlayerData.getIslandName(player.getName()));
@@ -81,16 +93,21 @@ public class IslandCommand implements CommandExecutor {
                 break;
 
             case "reset":
-                islandTeleport(player, main.getConfigString("Path.Template-world-copier"));
-                IslandManager.resetWorld(
-                        main.getConfigString("Path.Island-folder") + PlayerData.getIslandName(playerName),
-                        main.getConfigString("Path.Template-world-copier") + "/",
-                        main.getConfigString("Path.Island-folder") + playerName,
-                        playerName,
-                        playerName
-                );
-                islandTeleport(player, main.getConfigString("Path.Island-folder") + PlayerData.getIslandName(player.getName()));
-                player.sendMessage(main.getConfigString("Island.Reset-success"));
+                if (economy.getBalance(player.getName()) >= main.getConfigInt("Island.Reset-cost")) {
+                    economy.withdrawPlayer(player.getName(), main.getConfigInt("Island.Reset-cost"));
+                    islandTeleport(player, main.getConfigString("Path.Template-world-copier"));
+                    IslandManager.resetWorld(
+                            main.getConfigString("Path.Island-folder") + PlayerData.getIslandName(playerName),
+                            main.getConfigString("Path.Template-world-copier") + "/",
+                            main.getConfigString("Path.Island-folder") + playerName,
+                            playerName,
+                            playerName
+                    );
+                    islandTeleport(player, main.getConfigString("Path.Island-folder") + PlayerData.getIslandName(player.getName()));
+                    player.sendMessage(main.getConfigString("Island.Reset-success"));
+                } else {
+                    player.sendMessage(main.getConfigString("Island.Reset-no-money"));
+                }
                 break;
 
             case "delete":

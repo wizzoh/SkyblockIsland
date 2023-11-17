@@ -7,9 +7,11 @@ import me.wizzo.skyblockisland.files.ConfigFile;
 import me.wizzo.skyblockisland.files.DatabaseFile;
 import me.wizzo.skyblockisland.listeners.PlayerInventoryListener;
 import me.wizzo.skyblockisland.listeners.PlayerJoinQuitListener;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -24,6 +26,7 @@ public final class SkyblockIsland extends JavaPlugin {
     private ConfigFile configFile;
     private DatabaseFile databaseFile;
     private HikariCPSettings hikariCPSettings;
+    private static Economy economy;
 
     @Override
     public void onEnable() {
@@ -34,6 +37,11 @@ public final class SkyblockIsland extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new PlayerJoinQuitListener(this), this);
         Bukkit.getPluginManager().registerEvents(new PlayerInventoryListener(this), this);
         this.prefix = configFile.get().getString("Prefix");
+
+        if (!setupEconomy()) {
+            System.out.println("No vault found");
+            getPluginLoader().disablePlugin(this);
+        }
 
         try {
             hikariCPSettings.initSource(this);
@@ -94,6 +102,20 @@ public final class SkyblockIsland extends JavaPlugin {
         new PlayerData(this);
     }
 
+    private boolean setupEconomy() {
+        if (getServer().getPluginManager().getPlugin("Vault") == null) {
+            return false;
+        }
+        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+        if (rsp == null) {
+            System.out.println("Economy vault nullo");
+            return false;
+        }
+        economy = rsp.getProvider();
+        System.out.println("Economy vault trovato");
+        return true;
+    }
+
     //---------------
 
     public String colorsMessage(String message) {
@@ -103,7 +125,9 @@ public final class SkyblockIsland extends JavaPlugin {
         List<String> list = new ArrayList<>();
 
         for (String string: message) {
-            list.add(ChatColor.translateAlternateColorCodes('&', string));
+            list.add(ChatColor.translateAlternateColorCodes('&', string.replace("{cost}",
+                    String.valueOf(getConfigInt("Island.Reset-cost"))))
+            );
         }
         return list;
     }
@@ -126,5 +150,9 @@ public final class SkyblockIsland extends JavaPlugin {
     }
     public HikariCPSettings getHikariCPSettings() {
         return this.hikariCPSettings;
+    }
+
+    public static Economy getEconomy() {
+        return economy;
     }
 }
